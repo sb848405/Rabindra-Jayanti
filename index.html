@@ -57,25 +57,38 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            transition: opacity 1s ease;
+            transition: opacity 1s ease, visibility 1s;
         }
 
         #start-btn {
-            margin-top: 2rem;
-            padding: 12px 35px;
+            margin-top: 3rem;
+            padding: 15px 45px;
             font-family: var(--font-serif);
             font-size: 1.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
             background: transparent;
             border: 1px solid var(--krishnachura-red);
             color: var(--krishnachura-red);
-            border-radius: 30px;
-            transition: all 0.3s;
+            border-radius: 40px;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
             pointer-events: auto;
+            cursor: pointer;
+            animation: pulseGlow 2s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(155, 34, 38, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(155, 34, 38, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(155, 34, 38, 0); }
         }
 
         #start-btn:hover {
             background: var(--krishnachura-red);
             color: var(--pandulipi-bg);
+            animation: none;
+            box-shadow: 0 5px 20px rgba(155, 34, 38, 0.4);
+            transform: translateY(-2px);
         }
 
         body::after {
@@ -94,14 +107,14 @@
         .cursor-dot {
             position: fixed; top: 0; left: 0; width: 8px; height: 8px;
             background-color: var(--krishnachura-red); border-radius: 50%;
-            transform: translate(-50%, -50%); pointer-events: none; z-index: 9999;
+            transform: translate(-50%, -50%); pointer-events: none; z-index: 9999999;
             box-shadow: 0 0 15px var(--krishnachura-red);
         }
         
         .cursor-ring {
             position: fixed; top: 0; left: 0; width: 45px; height: 45px;
             border: 1px solid rgba(193, 18, 31, 0.5); border-radius: 50%;
-            transform: translate(-50%, -50%); pointer-events: none; z-index: 9998;
+            transform: translate(-50%, -50%); pointer-events: none; z-index: 9999998;
             transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.4s;
             backdrop-filter: blur(2px);
         }
@@ -115,6 +128,7 @@
             position: absolute; top: 0; left: 50%; width: 2px; height: 100%;
             z-index: 1; transform: translateX(-50%); pointer-events: none;
         }
+        
         .scroll-thread {
             width: 100%; height: 100%; stroke: var(--ink-primary); stroke-width: 1; stroke-dasharray: 4 8; opacity: 0.15;
         }
@@ -142,7 +156,7 @@
             filter: drop-shadow(0px -8px 10px rgba(0,0,0,0.06));
         }
 
-        .container { position: relative; z-index: 10; width: 100%; }
+        .container { position: relative; z-index: 10; width: 100%; display: flex; flex-direction: column; }
         .scene { min-height: 100vh; width: 100%; position: relative; display: flex; flex-direction: column; justify-content: center; padding: 10vw; }
         .center { align-items: center; text-align: center; }
         
@@ -191,9 +205,9 @@
         .portrait-container { perspective: 1000px; padding: 2rem; }
         
         .portrait-frame {
-            position: relative; width: clamp(200px, 25vw, 350px); aspect-ratio: 0.75;
+            position: relative; width: clamp(180px, 20vw, 300px); aspect-ratio: 0.75;
             background: #F4EFE6;
-            padding: 12px 12px 60px 12px; 
+            padding: 10px 10px 50px 10px; 
             box-shadow: 10px 25px 50px rgba(28, 25, 23, 0.2); 
             transform-style: preserve-3d;
             transition: transform 0.1s ease-out;
@@ -214,8 +228,12 @@
 
         #audio-controls { position: fixed; bottom: 40px; right: 40px; z-index: 1000; display: flex; align-items: center; gap: 15px; }
         .audio-label { font-size: 0.8rem; letter-spacing: 3px; font-family: var(--font-bengali); color: var(--ink-primary); opacity: 0.6; }
-        .play-btn { width: 45px; height: 45px; border: 1px solid var(--ink-primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: var(--ink-primary); transition: all 0.3s ease; opacity: 0.6; backdrop-filter: blur(5px); pointer-events: auto; }
+        .play-btn { width: 45px; height: 45px; border: 1px solid var(--ink-primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: var(--ink-primary); transition: all 0.3s ease; opacity: 0.6; backdrop-filter: blur(5px); pointer-events: auto; cursor: pointer; }
         .play-btn:hover { background: rgba(28, 25, 23, 0.05); transform: scale(1.1); opacity: 1; box-shadow: 0 0 20px rgba(28, 25, 23, 0.1); }
+
+        #mobile-pagination { display: none; }
+        .mobile-portrait-wrapper { display: none; }
+        #scene-mobile-poem { display: none !important; }
 
         @media (max-width: 900px) {
             :root {
@@ -232,136 +250,108 @@
                 background-color: var(--pandulipi-bg);
                 color: var(--ink-primary);
                 background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.06'/%3E%3C/svg%3E");
+                overflow: hidden !important; 
             }
             body::after { display: none; }
 
+            #intro-screen { background-color: var(--pandulipi-bg); }
             #music-canvas, #scroll-thread-container, .torn-edge, .bg-whisper, .progress-bar { display: none !important; }
 
-            .scene { 
-                min-height: auto; 
-                padding: 20px; 
-                display: block; 
-                border-bottom: 1px solid #111;
+            #main-scroll {
+                position: relative; width: 100vw; height: 100dvh;
+                perspective: 2500px; overflow: hidden; display: block; padding: 0;
             }
 
-            .container { 
-                padding: 10px; 
-                max-width: 100%; 
-                overflow: hidden; 
-                display: flex;
-                flex-direction: column;
+            .mobile-page { 
+                position: absolute; top: 0; left: 0; width: 100%; height: 100dvh;
+                background: var(--pandulipi-bg);
+                transform-origin: left center;
+                transition: transform 0.7s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.7s ease;
+                overflow-y: auto; overflow-x: hidden;
+                padding: 20px 20px 90px 20px; 
+                display: block !important; 
+                box-shadow: inset 15px 0 25px -10px rgba(0,0,0,0.08), -5px 0 15px rgba(0,0,0,0.1);
+                border-right: 1px solid rgba(0,0,0,0.1);
             }
 
-            #scene-1 { 
-                order: 1;
-                margin-top: 10px; 
-                text-align: center; 
-                border-top: 4px double #111; 
-                border-bottom: 4px double #111;
-                padding-bottom: 20px;
-            }
-            #scene-1::before {
-                content: 'কলকাতা | ২৫শে বৈশাখ';
-                display: block;
-                font-family: var(--font-bengali);
-                font-size: 0.9rem;
-                text-align: center;
-                border-bottom: 1px solid #111;
-                padding-bottom: 5px;
-                margin-bottom: 15px;
-                text-transform: uppercase;
-                letter-spacing: 2px;
-            }
-            .title-massive { 
-                font-size: 14vw; 
-                font-weight: 700; 
-                color: #111; 
-                text-shadow: none; 
-                filter: none !important; 
-                line-height: 1;
-            }
-            .handwritten { display: none; } 
-            .text-body { 
-                font-size: 1.1rem; 
-                text-align: justify; 
-                color: #111; 
-                column-count: 2; 
-                column-gap: 20px; 
-                margin-top: 20px;
-                max-width: 100%;
+            .mobile-page::-webkit-scrollbar { width: 4px; }
+            .mobile-page::-webkit-scrollbar-thumb { background: #111; }
+
+            .page-turned { transform: rotateY(-110deg); opacity: 0; pointer-events: none; }
+
+            #mobile-pagination {
+                display: flex; justify-content: space-between; align-items: center;
+                position: fixed; bottom: 0; left: 0; width: 100%; padding: 15px 25px;
+                background: var(--pandulipi-bg); border-top: 2px solid #111; z-index: 10000;
+                font-family: var(--font-bengali); font-size: 1.2rem; color: #111; font-weight: bold;
+                box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
             }
 
-            #scene-2 { order: 3; padding: 20px 0; }
-            .poetry-block {
-                background: transparent;
-                border: none;
-                box-shadow: none;
-                padding: 0;
-                backdrop-filter: none;
+            .nav-btn { cursor: pointer; padding: 5px 15px; border: 1px solid #111; background: transparent; font-family: inherit; font-size: 1.2rem; transition: opacity 0.3s; }
+
+            .masthead {
+                display: flex; justify-content: space-between; align-items: center;
+                border-top: 4px double #111; border-bottom: 2px solid #111;
+                padding: 10px 0; margin-bottom: 20px; font-family: var(--font-bengali);
+                font-size: 0.9rem; font-weight: 600; text-transform: uppercase;
             }
-            .poetry-block::before { display: none; }
 
-            #scene-poem { order: 4; height: auto; padding: 20px 0; border-bottom: 1px solid #111; }
-            .poem-sticky-container { position: relative; height: auto; background: #fff; border: 2px solid #111; padding: 20px; display: block; }
-            .poem-sticky-container::before {
-                content: 'বিশেষ ক্রোড়পত্র';
-                display: block; text-align: center; font-family: var(--font-bengali); font-weight: bold; font-size: 1.2rem;
-                border-bottom: 1px solid #111; margin-bottom: 15px; padding-bottom: 5px;
-            }
-            .grand-poem-line { font-size: 1.4rem; color: #111; text-shadow: none; margin: 10px 0; font-family: var(--font-serif); }
-
-            #scene-5 { order: 5; padding: 20px 0; background: transparent; }
-            #scene-5 h2 { font-size: 2rem; border-bottom: 1px solid #111; display: inline-block; margin-bottom: 15px; }
-
-            #scene-6, .finale-layout { display: contents; }
+            #scene-1 .title-massive { font-size: 15vw; font-weight: 700; color: #111; text-shadow: none; filter: none !important; line-height: 1; margin-bottom: 20px; text-align: center; }
             
-            .fade-up-end {
-                order: 6;
-                padding: 20px 0;
-                border-bottom: 2px solid #111;
+            .mobile-portrait-wrapper {
+                display: block; width: 100%; border: 1px solid #111; padding: 4px; margin: 15px 0 25px 0; background: #fff;
+            }
+            .mobile-portrait-img { width: 100%; height: auto; filter: grayscale(100%) contrast(1.4) sepia(0.1); display: block; }
+            .news-caption { font-family: var(--font-bengali); font-size: 0.95rem; text-align: right; color: #333; margin-top: 6px; border-top: 1px dotted #ccc; padding-top: 4px; font-style: italic;}
+
+            .handwritten { display: none; } 
+            
+            #scene-1 .text-body {
+                font-size: 1.15rem; text-align: justify; color: #111; 
+                margin-top: 15px; max-width: 100%;
+            }
+            #scene-1 .text-body:first-of-type::first-letter {
+                font-size: 3.5rem; float: left; margin-right: 8px; line-height: 1; font-weight: bold; font-family: var(--font-serif); color: #111;
             }
 
-            .portrait-container { 
-                order: 2;
-                padding: 0; 
-                margin: 20px auto; 
-                perspective: none; 
-                width: 70%;
-                max-width: 320px;
-                display: flex;
-                justify-content: center;
-            }
-            .portrait-frame { 
-                width: 100%; 
-                padding: 5px; 
-                background: #fff; 
-                border: 1px solid #111; 
-                box-shadow: none; 
-                transform: none !important; 
-                margin: 0 auto;
-            }
-            .portrait-img { filter: grayscale(100%) contrast(1.5); }
-            .glare { display: none; }
-            .iti-signature { display: none; } 
+            #scene-6 .portrait-container { display: none !important; } 
 
-            #scene-3 { order: 7; padding: 20px 0; border-bottom: none; }
-            #scene-3 h2 { font-size: 2rem; text-align: center; border-bottom: 2px solid #111; padding-bottom: 10px; margin-bottom: 20px; }
+            .poetry-block { background: transparent; border: none; box-shadow: none; padding: 0; backdrop-filter: none; }
+            .poetry-block::before { display: none; }
+            #scene-2 .text-body { font-size: 1.15rem; color: #111; text-align: justify; }
+
+            #scene-mobile-poem { padding: 25px 0; background: transparent; }
+            .poem-box { border: 2px solid #111; padding: 20px; background: #F5F2EB; box-shadow: 4px 4px 0 #111; margin: 20px; position: relative; }
+            .poem-box::before { content: 'কাব্য পাতা'; display: block; text-align: center; font-family: var(--font-bengali); font-weight: bold; font-size: 1.1rem; border-bottom: 2px solid #111; margin-bottom: 15px; padding-bottom: 5px; color: #111; }
+            .poem-title { font-family: var(--font-bengali); font-size: 1.8rem; font-weight: bold; color: #111; text-align: center; border-bottom: 1px dashed #666; padding-bottom: 10px; margin-bottom: 15px; }
+            .poem-stanza { font-family: var(--font-bengali); font-size: 1.2rem; color: #111; text-align: center; line-height: 1.8; }
+            .poem-translation { font-family: var(--font-serif); font-size: 1.1rem; color: #333; text-align: center; font-style: italic; margin-top: 15px; border-top: 1px dotted #ccc; padding-top: 15px; }
+
+            .poem-sticky-container { position: relative; height: auto; background: transparent; border: 2px solid #111; padding: 25px 15px; display: block; box-shadow: 4px 4px 0 #111; width: 100%; margin-top: 30px;}
+            .poem-sticky-container::before {
+                content: 'বিশেষ ক্রোড়পত্র'; display: block; text-align: center; font-family: var(--font-bengali); font-weight: bold; font-size: 1.3rem;
+                border-bottom: 2px solid #111; margin-bottom: 25px; padding-bottom: 10px; color: #111;
+            }
+            .grand-poem-line { font-size: 1.5rem; color: #111; text-shadow: none; margin: 12px 0; font-family: var(--font-serif); }
+
+            #scene-5 h2 { font-size: 2.2rem; border-bottom: 2px solid #111; display: inline-block; margin-bottom: 20px; color: #111; font-weight: bold; }
+            #scene-5 .text-body { font-size: 1.15rem; color: #111; text-align: justify; }
+
+            .finale-layout { display: block; }
+            .fade-up-end { padding: 25px 0; }
+            .fade-up-end .text-body { font-size: 1.25rem; color: #111; text-align: justify; font-weight: bold; border-top: 4px double #111; padding-top: 20px; }
+
+            #scene-3 h2 { font-size: 2.2rem; text-align: center; border-bottom: 2px solid #111; padding-bottom: 10px; margin-bottom: 25px; font-weight: 700; color: #111; }
             #scene-3 .text-body { display: none; } 
             .ink-gallery { display: block; margin-top: 0; }
             .ink-blot-wrapper { 
-                width: 100%; 
-                height: auto; 
-                border: 1px solid #111; 
-                border-radius: 0;
-                padding: 15px; 
-                margin-bottom: 10px;
-                display: block;
-                background: #fff;
+                width: 100%; height: auto; border: 1px solid #111; border-top: 3px solid #111; border-radius: 0;
+                padding: 15px; margin-bottom: 20px; display: block; background: #fff;
             }
             .ink-blot-shape { display: none; }
             .ink-blot-content { opacity: 1; transform: none; position: relative; pointer-events: auto; text-align: left; }
-            .ink-title { color: #111; font-size: 1.5rem; font-weight: 700; border-bottom: 1px dashed #ccc; padding-bottom: 5px; margin-bottom: 5px; }
-            .ink-desc { color: #333; font-size: 1rem; font-style: normal; text-align: justify; }
+            .ink-title { color: #111; font-size: 1.6rem; font-weight: 700; border-bottom: 1px dashed #999; padding-bottom: 5px; margin-bottom: 8px; }
+            .ink-desc { color: #222; font-size: 1.1rem; font-style: normal; text-align: justify; }
 
             .char { opacity: 1 !important; transform: none !important; filter: none !important; }
         }
@@ -370,8 +360,8 @@
 <body class="locked">
 
     <div id="intro-screen">
-        <h1 class="bengali-display" style="font-size: clamp(3rem, 6vw, 6rem); color: var(--krishnachura-red); text-align: center;">Are you ready?</h1>
-        <button id="start-btn">kuch bhu</button>
+        <h1 class="bengali-display" style="font-size: clamp(3rem, 6vw, 6rem); color: var(--krishnachura-red); text-align: center; filter: drop-shadow(0 0 10px rgba(155,34,38,0.2));">Are you ready?</h1>
+        <button id="start-btn">kuch bhiii</button>
     </div>
 
     <svg style="width:0; height:0; position:absolute;" aria-hidden="true">
@@ -394,7 +384,7 @@
     <canvas id="music-canvas"></canvas>
 
     <audio id="bg-audio" loop>
-        <source src="aud.mp3" type="audio/mpeg"> 
+        <source src="AaAud.mp3" type="audio/mpeg"> 
     </audio>
 
     <div id="audio-controls">
@@ -414,46 +404,74 @@
             </svg>
         </div>
 
-        <section class="scene center" id="scene-1">
+        <section class="scene center mobile-page" id="scene-1">
             <div class="bg-whisper drift-text" style="top: 20%; left: 50%; transform: translateX(-50%);">অপেক্ষা</div>
+            <div class="masthead">
+                <span>কলকাতা | ২৫শে বৈশাখ</span>
+                <span>বিশেষ সংস্করণ</span>
+            </div>
+            <h1 class="bengali-display title-massive cinema-text">পঁচিশে বৈশাখ</h1>
             
-            <div class="handwritten fade-up">a quiet afternoon in Jorasanko...</div>
-            
-            <h1 class="bengali-display title-massive cinema-text">
-                পঁচিশে বৈশাখ
-            </h1>
-            
+            <div class="mobile-portrait-wrapper">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop" alt="The Muse" class="mobile-portrait-img">
+                <div class="news-caption">চিত্র: একটি অসম্পূর্ণ কবিতা</div>
+            </div>
+
+            <div class="handwritten fade-up">a quiet afternoon in Garia...</div>
             <p class="text-body fade-up" style="position: relative; z-index: 5;">
-                They say the poet wrote about every shade of human emotion. He mapped the monsoons of Bengal and the depths of solitary longing. But standing here today, surrounded by his legacy, I realized something profound.
+                 They say the poet wrote about every shade of human emotion, tracing the monsoons of Bengal and the quiet ache of longing. But standing here today, surrounded by his legacy, I understood something deeper. He never knew your laughter, never saw how your eyes hold entire skies, never felt the warmth you leave behind in every room. And somehow, for all he wrote, he still missed the most beautiful story you.
             </p>
             <p class="text-body fade-up" style="color: var(--ink-primary); font-family: var(--font-bengali); column-span: all;">
-                <i>He never got to write about you.</i>
+                <i>So, i wrote something for you.</i>
             </p>
-
             <svg class="torn-edge" viewBox="0 0 1200 50" preserveAspectRatio="none">
                 <path d="M0,50 L0,20 Q150,40 300,10 T600,20 T900,10 T1200,30 L1200,50 Z" />
             </svg>
         </section>
 
-        <section class="scene center" id="scene-2">
+        <section class="scene center mobile-page" id="scene-2">
             <div class="bg-whisper drift-text" style="top: 10%; right: -10%;">গীতবিতান</div>
-
             <div class="poetry-block slide-in-up">
                 <p class="text-body" style="text-align: justify;">
-                    He never saw the way you absently fix the pleats of your saree when you are deep in thought. He never heard the quiet, almost imperceptible <i>'hm'</i> you make when reading a line you love.
+                    @rabinfranath tagor,
                 </p>
                 <p class="text-body" style="margin-top: 1rem; text-align: justify;">
-                    If he had seen your smile catching the golden hour light in a North Kolkata alleyway, the <i>Gitabitan</i> would have been twice as thick. Entire stanzas would have been dedicated just to the way you look away when caught staring.
+                    আজ অদ্ভুতভাবে তোমার দিনের ভেতরটাকেই ভাবছিলাম কেমন করে তুমি একই সঙ্গে শক্ত আর কোমল হয়ে ওঠো। সকালে যখন তুমি ছাত্রদের সামনে দাঁড়াও, তোমার কণ্ঠে যে ধৈর্য থাকে, তা যেন এক নিঃশব্দ আশ্রয় আর বিকেলের আলো নামতে না নামতেই, সেই একই মানুষটিই রিংয়ের মধ্যে দাঁড়িয়ে ঘাম, আঘাত আর সাহসের ভাষায় নিজেকে নতুন করে লেখে।
                 </p>
-                <div class="handwritten" style="margin-top: 2rem; text-align: right; column-span: all;">and so, I must write it myself.</div>
+                <p class="text-body" style="margin-top: 1rem; text-align: justify;">
+                    তোমার মুঠো বেঁধে আঘাত করা দেখে মনে হয় না শুধু লড়াই করছ মনে হয় তুমি নিজের সীমারেখাগুলো ভেঙে দিচ্ছ। আবার যখন কোনো বাচ্চার খাতা ঠিক করে দাও, বা ভুল হলে হেসে বুঝিয়ে বলো, তখন বোঝা যায়, শক্তির ভেতরেও কী গভীর মমতা লুকিয়ে থাকে।
+                </p>
+                <p class="text-body" style="margin-top: 1rem; text-align: justify;">
+                    ভাবি, যদি কবিরা তোমাকে দেখতেন এই দুই স্রোতের মিলন, এই অদ্ভুত সাম্য তবে তারা হয়তো নতুন ভাষা খুঁজে নিতেন। কারণ তোমাকে কেবল সৌন্দর্যে ধরা যায় না, আবার কেবল শক্তিতেও নয়; তুমি দুয়ের মাঝখানে এক বিরল সুর, যা সহজে লেখা যায় না, শুধু অনুভব করা যায়।
+                </p>
+                <p class="text-body" style="margin-top: 1rem; text-align: justify;">
+                    তাই লিখতে বসে বারবার মনে হয়, পৃথিবীর সব শব্দ হয়তো যথেষ্ট নয় তবু চেষ্টা করে যাই, কারণ তোমাকে না লিখে থাকা আরও অসম্ভব।
+                </p>
             </div>
-            
             <svg class="torn-edge" viewBox="0 0 1200 50" preserveAspectRatio="none" style="transform: scaleY(-1); bottom: auto; top: -2px;">
                 <path d="M0,50 L0,20 Q150,40 300,10 T600,20 T900,10 T1200,30 L1200,50 Z" />
             </svg>
         </section>
 
-        <section class="scene center" id="scene-3">
+        <section class="scene mobile-page" id="scene-mobile-poem">
+            <div class="poem-box">
+                <div class="poem-title">অলিখিত কবিতা</div>
+                <div class="poem-stanza">
+                    তোমার শহরে আজ শ্রাবণের মেঘ,<br>
+                    আমার খাতায় শুধু শূন্যতার দাগ।<br>
+                    রবিঠাকুরের গানে তোমায় খুঁজি,<br>
+                    তুমি তো আমার না-বলা অনুরাগ।
+                </div>
+                <div class="poem-translation">
+                    In your city, the monsoon clouds gather,<br>
+                    On my notebook, only stains of emptiness.<br>
+                    I search for you in Tagore's melodies,<br>
+                    You are my unspoken devotion.
+                </div>
+            </div>
+        </section>
+
+        <section class="scene center mobile-page" id="scene-3">
             <h2 class="bengali-display cinema-text" style="font-size: clamp(3.5rem, 6vw, 6rem); margin-bottom: 0.5rem;">লুকানো শব্দ</h2>
             <p class="text-body fade-up" style="font-style: italic; opacity: 0.7;">( Hover over the ink to read the margins of my mind )</p>
 
@@ -469,79 +487,86 @@
                     <div class="ink-blot-shape" style="border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transition-duration: 1s;"></div>
                     <div class="ink-blot-content">
                         <div class="ink-title">কাজল</div>
-                        <p class="ink-desc">The smudged kohl under your eyes after a long day. It doesn't ruin the poetry; it simply underlines the most important parts.</p>
+                        <p class="ink-desc">The smudged kohl under your eyes after a long day. It doesn't ruin the poetry, it simply underlines the most important parts.</p>
                     </div>
                 </div>
                 <div class="ink-blot-wrapper">
                     <div class="ink-blot-shape" style="border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; transition-duration: 1.2s;"></div>
                     <div class="ink-blot-content">
                         <div class="ink-title">ছন্দ</div>
-                        <p class="ink-desc">You don't walk into a room; you occur to it. Like a sudden change in rhythm in the middle of a familiar song.</p>
+                        <p class="ink-desc">You don't walk into poetry, you occur to it. Like a sudden change in rhythm in the middle of a familiar song.</p>
                     </div>
                 </div>
                 <div class="ink-blot-wrapper">
                     <div class="ink-blot-shape" style="border-radius: 40% 70% 30% 60% / 50% 40% 70% 50%; transition-duration: 1.1s;"></div>
                     <div class="ink-blot-content">
                         <div class="ink-title">স্পর্শ</div>
-                        <p class="ink-desc">The accidental graze of your hand against mine. A fleeting collision of universes that rewrote my entire history.</p>
+                        <p class="ink-desc">The accidental graze of your hand against object. A fleeting collision of universes that rewrote the entire history.</p>
                     </div>
                 </div>
                 <div class="ink-blot-wrapper">
                     <div class="ink-blot-shape" style="border-radius: 70% 30% 50% 60% / 30% 60% 40% 70%; transition-duration: 1.3s;"></div>
                     <div class="ink-blot-content">
                         <div class="ink-title">মায়া</div>
-                        <p class="ink-desc">The careless way you gather your hair into a messy bun. An effortless illusion that somehow holds all my gravity.</p>
+                        <p class="ink-desc">The careless way you gather your hair into a messy bun. An effortless illusion that somehow holds all someone's gravity.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="scene-poem">
+        <section id="scene-poem" class="mobile-page">
             <div class="poem-sticky-container">
                 <div class="bg-whisper drift-text" style="top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.03; font-size: 60vw;">তুমি</div>
-                
-                <h2 class="bengali-display grand-poem-line p-line-1 cinema-text">You are not just a person.</h2>
+                <h2 class="bengali-display grand-poem-line p-line-1 cinema-text">You are not just a angel.</h2>
                 <h2 class="bengali-display grand-poem-line p-line-2 cinema-text">You are an unfinished manuscript,</h2>
-                <h2 class="bengali-display grand-poem-line p-line-3 cinema-text">breathing quietly in the archives of my soul.</h2>
+                <h2 class="bengali-display grand-poem-line p-line-3 cinema-text">breathing quietly in the archives of god's soul.</h2>
                 <h2 class="bengali-display grand-poem-line p-line-4 cinema-text" style="color: var(--krishnachura-red); font-style: italic; margin-top: 1rem;">A verse I will spend forever trying to memorize.</h2>
             </div>
         </section>
 
-        <section class="scene center" id="scene-5">
+        <section class="scene center mobile-page" id="scene-5">
             <div class="bg-whisper drift-text" style="top: 30%; left: -10%;">শ্রাবণ</div>
-            
             <div style="max-width: 800px; margin: 0 auto; text-align: center; position: relative;">
                 <h2 class="bengali-display cinema-text" style="font-size: clamp(3rem, 5vw, 5rem); margin-bottom: 2rem;">শ্রাবণের চিঠি</h2>
                 <p class="text-body fade-up" style="margin: 0 auto; text-align: justify; column-count: 2; column-gap: 20px;">
-                    I wrote a hundred letters in my mind. Each one dissolved by the torrential rain of Sravana before it could reach the paper. They say unexpressed love eventually turns into art. But mine didn't turn into art. It turned into a quiet longing, waiting by the rusted window grilles of an old North Kolkata house, listening to the rain.
-                </p>
+I wrote a hundred letters, thinking perhaps one would turn into art. But none of them did. Each one seemed to dissolve somewhere between thought and feeling, carried away by the long, unending rains of Srabana before it could ever settle onto paper. They remained unfinished—like words that chose silence over form. <br>
+
+Sometimes I feel those letters still linger, caught in the damp air of an old North Kolkata house, resting quietly against rusted window grilles, listening to the rain fall without urgency. Perhaps not everything is meant to be written. Some things exist only as a presence, a quiet ache that refuses language. <br>
+
+And yet, in that silence, one truth returns to the world with every drop of rain:
+“Amaro porano jaha chai, tumi tai.” <br>
+
+Maybe that is why these letters never became art. They were never meant to be read. They were only meant to be felt.                </p>
                 <div class="handwritten fade-up" style="margin-top: 2rem; text-align: center; font-size: clamp(3.5rem, 5vw, 5rem);">some letters are only meant to be felt.</div>
             </div>
         </section>
 
-        <section class="scene" id="scene-6">
+        <section class="scene mobile-page" id="scene-6">
             <div class="finale-layout">
-                
+                <div class="portrait-container">
+                    <div class="portrait-frame fade-up-end" id="3d-portrait">
+                        <div class="glare" id="portrait-glare"></div>
+                        <img src="Rabin.png" alt="The Muse" class="portrait-img">
+                        <div class="handwritten iti-signature">ইতি...</div>
+                    </div>
+                </div>
                 <div style="max-width: 500px;" class="fade-up-end">
                     <p class="text-body" style="font-size: 1.5rem; margin-bottom: 1rem; text-align: justify;">
                         So let the city celebrate the poet today. Let them sing his songs.<br><br>
                         In the quiet sanctuary of my thoughts, I am only celebrating the poetry that exists because you do.
                     </p>
-                    <div class="handwritten" style="font-size: clamp(5rem, 8vw, 8rem); color: var(--ink-primary);">forever, yours.</div>
+                    <div class="handwritten" style="font-size: clamp(5rem, 8vw, 8rem); color: var(--ink-primary);">Sankho.</div>
                 </div>
-
-                <div class="portrait-container">
-                    <div class="portrait-frame fade-up-end" id="3d-portrait">
-                        <div class="glare" id="portrait-glare"></div>
-                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop" alt="The Muse" class="portrait-img">
-                        <div class="handwritten iti-signature">ইতি...</div>
-                    </div>
-                </div>
-
             </div>
         </section>
 
     </main>
+
+    <div id="mobile-pagination">
+        <button class="nav-btn" id="prev-page">← পূর্ববর্তী</button>
+        <span id="page-indicator">পাতা ১ / ৭</span>
+        <button class="nav-btn" id="next-page">পরবর্তী →</button>
+    </div>
 
     <script>
         const introScreen = document.getElementById('intro-screen');
@@ -549,20 +574,22 @@
         const audio = document.getElementById('bg-audio');
         const playBtn = document.getElementById('play-toggle');
         const playIcon = document.querySelector('.play-icon');
-        let isPlaying = false; audio.volume = 0.3; 
+        let isPlaying = false; audio.volume = 0.5; 
 
         startBtn.addEventListener('click', () => {
+            // Hide intro screen
             introScreen.style.opacity = '0';
             setTimeout(() => {
                 introScreen.style.display = 'none';
-                document.body.classList.remove('locked');
-                ScrollTrigger.refresh();
             }, 1000);
             
-            audio.play().then(() => {
-                isPlaying = true;
-                playIcon.setAttribute('d', 'M0 0H4V14H0V0ZM8 0H12V14H8V0Z');
-            }).catch(e => console.log(e));
+            document.body.classList.remove('locked');
+            ScrollTrigger.refresh();
+            
+            // Force play audio automatically
+            audio.play();
+            isPlaying = true;
+            playIcon.setAttribute('d', 'M0 0H4V14H0V0ZM8 0H12V14H8V0Z');
         });
 
         document.querySelectorAll('.cinema-text').forEach(el => {
@@ -780,6 +807,61 @@
 
         mm.add("(max-width: 900px)", () => {
             gsap.to('.char', { opacity: 1, y: 0, filter: 'blur(0px)', rotation: 0, duration: 0.1 });
+
+            const pages = document.querySelectorAll('.mobile-page');
+            const prevBtn = document.getElementById('prev-page');
+            const nextBtn = document.getElementById('next-page');
+            const indicator = document.getElementById('page-indicator');
+            let currentPage = 0;
+
+            pages.forEach((p, i) => {
+                p.style.zIndex = pages.length - i;
+            });
+
+            function updatePages() {
+                pages.forEach((p, i) => {
+                    if (i < currentPage) {
+                        p.classList.add('page-turned');
+                    } else {
+                        p.classList.remove('page-turned');
+                    }
+                    if(i === currentPage) {
+                        p.scrollTop = 0;
+                    }
+                });
+                indicator.innerText = `পাতা ${currentPage + 1} / ${pages.length}`;
+                prevBtn.style.opacity = currentPage === 0 ? '0.3' : '1';
+                nextBtn.style.opacity = currentPage === pages.length - 1 ? '0.3' : '1';
+            }
+
+            prevBtn.addEventListener('click', () => { if (currentPage > 0) { currentPage--; updatePages(); }});
+            nextBtn.addEventListener('click', () => { if (currentPage < pages.length - 1) { currentPage++; updatePages(); }});
+
+            let startX = 0;
+            let startY = 0;
+            const mainScroll = document.getElementById('main-scroll');
+
+            mainScroll.addEventListener('touchstart', e => { 
+                startX = e.touches[0].clientX; 
+                startY = e.touches[0].clientY; 
+            }, {passive: true});
+
+            mainScroll.addEventListener('touchend', e => {
+                let endX = e.changedTouches[0].clientX;
+                let endY = e.changedTouches[0].clientY;
+                let diffX = startX - endX;
+                let diffY = Math.abs(startY - endY);
+                
+                if (Math.abs(diffX) > 50 && diffY < 50) {
+                    if (diffX > 0 && currentPage < pages.length - 1) {
+                        currentPage++; updatePages();
+                    } else if (diffX < 0 && currentPage > 0) {
+                        currentPage--; updatePages();
+                    }
+                }
+            }, {passive: true});
+
+            updatePages();
         });
 
         document.addEventListener('contextmenu', e => e.preventDefault());
